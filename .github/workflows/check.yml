@@ -22,7 +22,7 @@ jobs:
             https://github.com/antialias/sprite-profiles/releases/latest/download/sprite-profiles-linux_x86_64
           chmod +x "$RUNNER_TEMP/bin/sprite-profiles"
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-          sprite-profiles --version
+          "$RUNNER_TEMP/bin/sprite-profiles" --version
 
       # @owner/NAME finds the repository sprite-profile-NAME, so the two must agree.
       - name: The name matches the repository
@@ -33,12 +33,8 @@ jobs:
             echo "::error file=profile.toml::name is \"$name\", so this repository must be sprite-profile-$name (it is $repo)"
             exit 1
           fi
-          echo "PROFILE_NAME=$name" >> "$GITHUB_ENV"
 
-      # A path pick must be a folder named for the profile, so check it through a link.
       - name: The profile resolves and plans
         run: |
-          ln -s "$GITHUB_WORKSPACE" "$RUNNER_TEMP/$PROFILE_NAME"
-          cd "$RUNNER_TEMP"
-          sprite-profiles show "./$PROFILE_NAME"
-          sprite-profiles plan claude-code "./$PROFILE_NAME"
+          sprite-profiles show ./
+          sprite-profiles plan claude-code ./
