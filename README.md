@@ -37,10 +37,9 @@ in, so the Sprite never holds it:
 ## Try it
 
 ```sh
-ln -sfn "$PWD" /tmp/NAME                        # a path pick must be named for the profile
-sprite-profiles show /tmp/NAME
-sprite-profiles plan claude-code /tmp/NAME
-sprite-profiles launch claude-code /tmp/NAME --name demo-1
+sprite-profiles show ./
+sprite-profiles plan claude-code ./
+sprite-profiles launch claude-code ./ --name demo-1
 ```
 
 ## Publish
