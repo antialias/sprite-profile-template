@@ -24,8 +24,8 @@ a Sprite and what it costs), and the network rules for every domain it reaches.
   doesn't define is refused, so a typo can't silently do nothing.
 - `setup.sh`: optional. It runs in the Sprite as user `sprite`, in a plain shell, and must be
   safe to run twice. Delete it if the profile installs nothing.
-- `claude/skills/hello/SKILL.md`: an example Claude Code skill. In the Sprite it lands at
-  `~/.claude/skills/you.NAME--hello/`.
+- `claude/skills/hello/SKILL.md`: an example Claude Code skill. Picked as `@you/NAME`, it lands
+  at `~/.claude/skills/you.NAME--hello/` in the Sprite.
 - `.github/workflows/check.yml`: on every push, downloads the latest sprite-profiles and
   checks that the name matches the repository and that the profile resolves and plans beside
   `claude-code`. It needs no Fly token and creates nothing.
