@@ -1,0 +1,24 @@
+# Rename: set name to NAME, where this repository is sprite-profile-NAME.
+# Every field is in https://github.com/antialias/sprite-profiles/blob/main/docs/SPEC.md
+format      = 2
+name        = "template"
+summary     = "A starting point: one skill, one network rule and a setup.sh"
+description = """
+What this profile gives a Sprite, and what it costs: the domains it reaches, whether \
+setup.sh installs anything, and anything a person has to do at launch."""
+
+# Every domain the profile reaches. As soon as any profile in a set declares a policy, only
+# the combined rules apply, so allow what you need. The defaults cover npm and Ubuntu.
+[policy]
+rules = [
+  { include = "defaults" },
+  { action = "allow", domain = "example.com" },
+]
+
+# Values that differ per person but are never secrets, given with -i at launch.
+# [inputs.region]
+# summary = "Where to point the client"
+# default = "us"
+
+# A token belongs in a connector, never in the profile or the Sprite:
+# see https://github.com/antialias/sprite-profiles/blob/main/docs/INPUTS.md

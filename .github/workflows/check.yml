@@ -1,0 +1,44 @@
+# Checks that the profile resolves and plans beside claude-code, with the latest
+# sprite-profiles release. Creates nothing and needs no Fly token.
+name: check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Install sprite-profiles
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          curl -fsSL -o "$RUNNER_TEMP/bin/sprite-profiles" \
+            https://github.com/antialias/sprite-profiles/releases/latest/download/sprite-profiles-linux_x86_64
+          chmod +x "$RUNNER_TEMP/bin/sprite-profiles"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          sprite-profiles --version
+
+      # @owner/NAME finds the repository sprite-profile-NAME, so the two must agree.
+      - name: The name matches the repository
+        run: |
+          name=$(sed -n 's/^name *= *"\([^"]*\)".*/\1/p' profile.toml)
+          repo=${GITHUB_REPOSITORY#*/}
+          if [ "$repo" != "sprite-profile-$name" ]; then
+            echo "::error file=profile.toml::name is \"$name\", so this repository must be sprite-profile-$name (it is $repo)"
+            exit 1
+          fi
+          echo "PROFILE_NAME=$name" >> "$GITHUB_ENV"
+
+      # A path pick must be a folder named for the profile, so check it through a link.
+      - name: The profile resolves and plans
+        run: |
+          ln -s "$GITHUB_WORKSPACE" "$RUNNER_TEMP/$PROFILE_NAME"
+          cd "$RUNNER_TEMP"
+          sprite-profiles show "./$PROFILE_NAME"
+          sprite-profiles plan claude-code "./$PROFILE_NAME"
